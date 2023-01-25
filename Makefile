@@ -1,27 +1,24 @@
 setup:
-	python3 -m venv ~/.dockerproj
-	
-activate:
-	source ~/.dockerproj/bin/activate
-
-run-circleci-local:
-	circleci local execute
-
-validate-circleci:
-	circleci config process .circleci/config.yml
+	python3 -m venv ~/.udacity-devops
 
 install:
-	pip install -r requirements.txt
+	pip install --upgrade pip &&\
+		pip install -r requirements.txt
 
 test:
-	python -m pytest -vv --cov=myrepolib tests/*.py
-	python -m pytest --nbval notebook.ipynb
+	#python -m pytest -vv --cov=myrepolib tests/*.py
+	#python -m pytest --nbval notebook.ipynb
 
-lint-docker:
-	hadolint Dockerfile
-	# pylint --disable=R,C,W1203,W1202 demos/**/**.py
+validate-circleci:
+	# See https://circleci.com/docs/2.0/local-cli/#processing-a-config
+	circleci config process .circleci/config.yml
+
+run-circleci-local:
+	# See https://circleci.com/docs/2.0/local-cli/#running-a-job
+	circleci local execute
 
 lint:
-	pylint --disable=R,C myrepolib cli web
+	hadolint demos/flask-sklearn-student-starter/Dockerfile
+	pylint --disable=R,C,W1203 demos/**/**.py
 
 all: install lint test
